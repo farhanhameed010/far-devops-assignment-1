@@ -1,0 +1,14 @@
+# Connect to Jenkins container
+docker exec -it jenkins bash
+
+# Install Docker CLI
+apt-get update && apt-get install -y docker.io
+
+# Add jenkins user to docker group
+usermod -aG docker jenkins
+
+# Check docker socket permissions
+ls -l /var/run/docker.sock
+
+# Restart Docker daemon
+service docker restart

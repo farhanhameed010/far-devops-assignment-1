@@ -23,6 +23,10 @@ pipeline {
     }
     
     post {
+        always {
+            // Clean workspace after build
+            cleanWs()
+        }
         success {
             echo 'Pipeline succeeded!'
         }
