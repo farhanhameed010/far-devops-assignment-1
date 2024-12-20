@@ -17,7 +17,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 script {
-                    def scannerHome = tool 'SonarQube Scanner'
+                    def scannerHome = tool 'SonarQube Scanner' // Ensure this matches the configured tool name
                     withSonarQubeEnv('SonarQube') {
                         sh """
                             ${scannerHome}/bin/sonar-scanner \
@@ -25,9 +25,8 @@ pipeline {
                             -Dsonar.projectName=far-devops-assignment \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=http://sonarqube:9000 \
-                            -Dsonar.javascript.node.maxspace=4096 \
                             -Dsonar.login=admin \
-                            -Dsonar.password=admin
+                            -Dsonar.password=tkxel1234
                         """
                     }
                 }
@@ -45,7 +44,7 @@ pipeline {
         }
     }
     
-    post {
+        post {
         always {
             cleanWs()
         }
