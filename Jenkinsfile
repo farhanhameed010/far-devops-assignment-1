@@ -4,9 +4,6 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'far-devops-assignment'
         DOCKER_TAG = 'latest'
-        // Add SonarQube server details
-        SONAR_SERVER = 'http://sonarqube:9000'
-        SONAR_PROJECT_KEY = 'far-devops-assignment'
     }
     
     stages {
@@ -20,26 +17,18 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 script {
-                    def scannerHome = tool 'SonarQubeScanner'
+                    def scannerHome = tool 'SonarQube Scanner'
                     withSonarQubeEnv('SonarQube') {
                         sh """
                             ${scannerHome}/bin/sonar-scanner \
-                            -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
-                            -Dsonar.projectName=${SONAR_PROJECT_KEY} \
+                            -Dsonar.projectKey=far-devops-assignment \
+                            -Dsonar.projectName=far-devops-assignment \
                             -Dsonar.sources=. \
-                            -Dsonar.host.url=${SONAR_SERVER} \
-                            -Dsonar.javascript.node.maxspace=4096
+                            -Dsonar.host.url=http://sonarqube:9000 \
+                            -Dsonar.javascript.node.maxspace=4096 \
+                            -Dsonar.login=admin \
+                            -Dsonar.password=admin
                         """
-                    }
-                    
-                    // Optional: Wait for quality gate
-                    timeout(time: 2, unit: 'MINUTES') {
-                        def qg = waitForQualityGate()
-                        if (qg.status != 'OK') {
-                            echo "Quality gate status: ${qg.status}"
-                            // Uncomment next line if you want to fail the build on quality gate failure
-                            // error "Pipeline aborted due to quality gate failure: ${qg.status}"
-                        }
                     }
                 }
             }
