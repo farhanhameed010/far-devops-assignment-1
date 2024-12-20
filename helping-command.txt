@@ -12,3 +12,18 @@ ls -l /var/run/docker.sock
 
 # Restart Docker daemon
 service docker restart
+
+
+Create a GitHub Webhook
+Create a Webhook in your repository to trigger the Jenkins job on push. Already have a Webhook configured? Skip this step.
+
+Go to the GitHub Webhook creation page for your repository and enter the following information:
+URL: Enter the following URL, replacing the values between *** as needed:
+
+
+***JENKINS_SERVER_URL***/job/***JENKINS_JOB_NAME***/build?token=***JENKINS_BUILD_TRIGGER_TOKEN***
+
+***JENKINS_SERVER_URL***/job/***JENKINS_JOB_NAME***/build?token=***JENKINS_BUILD_TRIGGER_TOKEN***
+Under Which events would you like to trigger this webhook? select Let me select individual events and check the following:
+Pushes
+Click Add webhook.
