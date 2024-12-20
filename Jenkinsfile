@@ -7,6 +7,12 @@ pipeline {
     }
     
     stages {
+        stage('Clean Workspace') {
+            steps {
+                cleanWs() // Ensures a clean workspace before starting
+            }
+        }
+
         stage('Checkout') {
             steps {
                 git branch: 'main',
@@ -17,7 +23,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 script {
-                    def scannerHome = tool 'SonarQube Scanner' // Ensure this matches the configured tool name
+                    def scannerHome = tool 'SonarQube Scanner' // Make sure this matches your Jenkins configuration
                     withSonarQubeEnv('SonarQube') {
                         sh """
                             ${scannerHome}/bin/sonar-scanner \
@@ -26,7 +32,8 @@ pipeline {
                             -Dsonar.sources=. \
                             -Dsonar.host.url=http://sonarqube:9000 \
                             -Dsonar.login=admin \
-                            -Dsonar.password=tkxel1234
+                            -Dsonar.password=tkxel1234 \
+                            -Dsonar.javascript.node.maxspace=4096
                         """
                     }
                 }
@@ -44,8 +51,9 @@ pipeline {
         }
     }
     
-        post {
+    post {
         always {
+            echo 'Cleaning up workspace...'
             cleanWs()
         }
         success {
@@ -53,6 +61,9 @@ pipeline {
         }
         failure {
             echo 'Pipeline failed!'
+            script {
+                echo 'Check the logs for details.'
+            }
         }
     }
 }
